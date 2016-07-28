@@ -1,145 +1,146 @@
 package com.sugarcrm.api.v4.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import org.apache.commons.codec.EncoderException;
-import org.apache.commons.codec.net.URLCodec;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.SerializedName;
-import com.sugarcrm.api.SugarApiException;
+import com.google.gson.JsonSyntaxException;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.sugarcrm.api.*;
 import com.sugarcrm.api.SugarBean;
-import com.sugarcrm.api.SugarCredentials;
-import com.sugarcrm.api.SugarSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Sugar API v4 specific stuff
- * 
- * @author mmarum
  *
+ * @author mmarum
  */
 public class SugarApi {
-  
-  private String REST_ENDPOINT = null;
-  
-  private URLCodec codec = null;
-  private Gson json = null;
 
-  public SugarApi(String sugarUrl){
-    REST_ENDPOINT = sugarUrl + "/service/v4/rest.php";
-    json = new GsonBuilder().create();
-    codec = new URLCodec();
-  }
-  
-  public class SugarLoginRequest{
-    protected SugarCredentials user_auth;
-    public void setUserAuth(SugarCredentials auth){
-      user_auth = auth;
-    }
-  }
-  
-  public class GetEntryRequest{
-    
-    public GetEntryRequest(String session, String moduleName, String id){
-      this.session = session;
-      this.moduleName = moduleName;
-      this.id = id;
-    }
-    
-    protected String session;
-    
-    @SerializedName("module_name")
-    protected String moduleName;
-    
-    protected String id;
-    
-  }
-	
-  public class NameValue{
-    protected String name;
-    protected String value;
-  }
-	
-  public String postToSugar(String urlStr) throws Exception {
-    URL url = new URL(urlStr);
-    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod("POST");
-    conn.setDoOutput(true);
-    conn.setDoInput(true);
-    conn.setUseCaches(false);
-    conn.setAllowUserInteraction(false);
-    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-    if (conn.getResponseCode() != 200) {
-      throw new IOException(conn.getResponseMessage());
+    private final static Logger LOG = LoggerFactory.getLogger(SugarApi.class);
+
+    private String restEndpoint = null;
+
+    private Gson json = null;
+
+    public SugarApi(String sugarUrl, String version) {
+        restEndpoint = sugarUrl + "/service/" + version + "/rest.php";
+        json = new GsonBuilder().create();
     }
 
-    // Buffer the result into a string
-    BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-    StringBuilder sb = new StringBuilder();
-    String line;
-    while ((line = rd.readLine()) != null) {
-      sb.append(line);
-    }
-    rd.close();
 
-    conn.disconnect();
-    if(System.getenv("sugardebug") != null){
-      System.out.println(sb.toString());
-    }
-    return sb.toString();
-  }
-  
-  public SugarSession getSugarSession(SugarCredentials credentials) throws SugarApiException {
-    
-
-    SugarLoginRequest loginReq = new SugarLoginRequest();
-    loginReq.setUserAuth(credentials);
-
-    SugarLoginResponse jResp = null;
-    try {
-      String response = postToSugar(REST_ENDPOINT+"?method=login&response_type=JSON&input_type=JSON&rest_data="+codec.encode(json.toJson(loginReq)));
-      jResp = json.fromJson(response, SugarLoginResponse.class);
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new SugarApiException("Sugar Login failed", e);
-    }
-    return jResp;
-  }
-  
-  public SugarBean getBean(SugarSession session, String moduleName, String guid) throws SugarApiException{
-    String sessionId = session.getSessionID();
-    GetEntryRequest req = new GetEntryRequest(sessionId, moduleName, guid);
-    String response = null;
-    try {
-      response = postToSugar(REST_ENDPOINT+"?method=get_entry&response_type=JSON&input_type=JSON&rest_data="+codec.encode(json.toJson(req)));
-    } catch (EncoderException e) {
-      e.printStackTrace();
-      throw new SugarApiException("Could not fetch bean.", e);
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new SugarApiException("Could not fetch bean.", e);
+    public class NameValue {
+        protected String name;
+        protected String value;
     }
 
-    GetEntryResponse entryResp = json.fromJson(response, GetEntryResponse.class);
-    if(entryResp.getEntryList() == null){
-      ErrorResponse error = json.fromJson(response, ErrorResponse.class);
-      SugarApiException ex = new SugarApiException(error.getName());
-      ex.setDescription(error.getDescription());
-      ex.setNumber(error.getNumber());
-      throw ex;
+    public String postToSugar(String urlStr, SugarPostParameters params) throws SugarApiException {
+        LOG.debug("JSON rest_data: "+json.toJson(params.restData));
+        try {
+            HttpResponse<String> result = Unirest.post(urlStr)
+                    .field("method", params.method)
+                    .field("input_type", params.inputType)
+                    .field("response_type", params.responseType)
+                    .field("rest_data", json.toJson(params.restData))
+                    .asString();
+
+            if (result.getStatus() != 200) {
+                throw new SugarApiException(result.getStatusText());
+            }
+
+            String response = result.getBody();
+            LOG.debug("Response: "+response);
+            ErrorResponse err = new SugarResponseValidator(response).getError();
+            LOG.info("Error response: " + err);
+
+            if (err != null) {
+                SugarApiException e = new SugarApiException(err.getDescription());
+                e.setNumber(err.getNumber());
+                e.setName(err.getName());
+                throw e;
+            }
+
+            return response;
+        } catch (UnirestException e) {
+            LOG.error("Error while calling the SugarCRM service", e);
+            throw new SugarApiException("Error while calling the SugarCRM service", e);
+        }
     }
-    if(entryResp.getEntryList().length > 0){
-      return entryResp.getEntryList()[0];
-    } else {
-      return null;
+
+    public SugarSession getSugarSession(SugarCredentials credentials) throws SugarApiException {
+        SugarRequest loginReq = new SugarLoginRequest(credentials);
+        SugarPostParameters params = new SugarPostParameters().method("login").restData(loginReq);
+        return json.fromJson(postToSugar(restEndpoint, params), SugarLoginResponse.class);
     }
-  }
-	
-	
+
+    public SugarBean getBean(SugarSession session, String moduleName, String uuid) throws SugarApiException {
+        String sessionId = session.getSessionID();
+        SugarRequest req = new GetEntryRequest(sessionId, moduleName, uuid);
+        SugarPostParameters params = new SugarPostParameters().method("get_entry").restData(req);
+        GetEntryResponse entryResp = json.fromJson(postToSugar(restEndpoint, params), GetEntryResponse.class);
+        if (entryResp.getEntryList().length > 0) {
+            return entryResp.getEntryList()[0];
+        } else {
+            return null;
+        }
+    }
+
+    public List<SugarBean> getBeans(SugarSession session, String moduleName, List<String> uuids) throws SugarApiException {
+        String sessionId = session.getSessionID();
+        SugarRequest req = new GetEntriesRequest(sessionId, moduleName, uuids);
+        SugarPostParameters params = new SugarPostParameters().method("get_entries").restData(req);
+        GetEntryResponse entryResp = json.fromJson(postToSugar(restEndpoint, params), GetEntryResponse.class);
+        if (entryResp.getEntryList().length > 0) {
+            List<SugarBean> beans = new ArrayList<SugarBean>();
+            beans.addAll(Arrays.asList(entryResp.getEntryList()));
+            return beans;
+        } else {
+            return null;
+        }
+    }
+
+
+    public List<SugarBean> getRelationships(SugarSession session, String moduleName, String id, String target, List<String> targetFields) throws SugarApiException {
+        String sessionId = session.getSessionID();
+        SugarRequest req = new GetRelationshipsRequest(sessionId, moduleName, id, target, targetFields);
+        SugarPostParameters params = new SugarPostParameters().method("get_relationships").restData(req);
+        GetEntryResponse entryResp = json.fromJson(postToSugar(restEndpoint, params), GetEntryResponse.class);
+        if (entryResp.getEntryList().length > 0) {
+            List<SugarBean> beans = new ArrayList<SugarBean>();
+            beans.addAll(Arrays.asList(entryResp.getEntryList()));
+            return beans;
+        } else {
+            return null;
+        }
+    }
+
+
+    private class SugarResponseValidator {
+        private String response;
+
+        public SugarResponseValidator(String response) {
+            this.response = response;
+        }
+
+        public ErrorResponse getError() {
+
+            try {
+                ErrorResponse resp = json.fromJson(response, ErrorResponse.class);
+                LOG.info("Sugar API error found");
+                LOG.info("Error content: " + resp);
+                if (resp != null && resp.getNumber() != null) {
+                    return resp;
+                }
+            } catch (JsonSyntaxException e) {
+                LOG.debug("No error found");
+            }
+            return null;
+        }
+    }
 }

@@ -4,15 +4,15 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * GetEntry response for v4 API
- * @author mmarum
  *
+ * @author mmarum
  */
 public class GetEntryResponse {
 
-  @SerializedName("entry_list")
-  protected SugarBean[] entryList;
-  
-  public SugarBean[] getEntryList() {
-    return entryList;
-  }
+    @SerializedName("entry_list")
+    protected SugarBean[] entryList;
+
+    public SugarBean[] getEntryList() {
+        return entryList;
+    }
 }
