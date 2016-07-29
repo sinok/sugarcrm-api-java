@@ -1,8 +1,9 @@
 package com.sugarcrm.api;
 
-import com.sugarcrm.api.v4.impl.SugarApi;
+import com.sugarcrm.api.v4.impl.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -34,12 +35,31 @@ public class SugarClient {
         return sugar.getBean(session, moduleName, guid);
     }
 
-    public List<SugarBean> getBeans(SugarSession session, String moduleName, List<String> uuids) throws SugarApiException {
-        return sugar.getBeans(session, moduleName, uuids);
+    public List<SugarBean> getBeansById(SugarSession session, String moduleName, List<String> uuids) throws SugarApiException {
+        return sugar.getBeansById(session, moduleName, uuids);
+    }
+
+    public List<SugarBean> getBeans(SugarSession session, String moduleName, String query) throws SugarApiException {
+        return sugar.getBeans(session, moduleName, query);
+    }
+
+    public List<SugarBean> getBeans(GetEntryListRequest request) throws SugarApiException {
+        return sugar.getBeans(request);
+    }
+
+    public SetEntryResponse setEntry(SugarSession session, String moduleName, List<Map<String,Object>> entryData) throws SugarApiException {
+        return sugar.setEntry(session,moduleName,entryData);
+    }
+
+    public SetEntriesResponse setEntries(SugarSession session, String moduleName, List<List<Map<String,Object>>> entriesData) throws SugarApiException {
+        return sugar.setEntries(session,moduleName,entriesData);
     }
 
     public List<SugarBean> getRelationships(SugarSession session, String moduleName, String id, String target, List<String> targetFields) throws SugarApiException {
         return sugar.getRelationships(session, moduleName, id, target, targetFields);
     }
 
+    public DocumentRevision getDocumentRevision(SugarSession session, String revisionId) throws SugarApiException {
+        return sugar.getDocumentRevision(session, revisionId);
+    }
 }

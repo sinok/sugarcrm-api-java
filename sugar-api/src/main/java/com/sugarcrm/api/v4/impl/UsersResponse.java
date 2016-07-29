@@ -2,6 +2,7 @@ package com.sugarcrm.api.v4.impl;
 
 import java.util.HashMap;
 
+import com.sugarcrm.api.SugarResponse;
 import com.sugarcrm.api.User;
 
 /**
@@ -10,7 +11,7 @@ import com.sugarcrm.api.User;
  * @author mmarum
  *
  */
-public class UsersResponse extends SugarBean implements User{
+public class UsersResponse extends SugarBean implements User, SugarResponse {
   
   public UsersResponse(){
     super();

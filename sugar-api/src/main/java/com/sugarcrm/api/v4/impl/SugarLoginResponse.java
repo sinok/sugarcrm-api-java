@@ -1,5 +1,6 @@
 package com.sugarcrm.api.v4.impl;
 
+import com.sugarcrm.api.SugarResponse;
 import com.sugarcrm.api.SugarSession;
 import com.sugarcrm.api.User;
 
@@ -9,7 +10,7 @@ import com.sugarcrm.api.User;
  * @author mmarum
  *
  */
-public class SugarLoginResponse extends SugarBean implements SugarSession{
+public class SugarLoginResponse extends SugarBean implements SugarSession, SugarResponse{
   
   public String getSessionID() {
     return id;
