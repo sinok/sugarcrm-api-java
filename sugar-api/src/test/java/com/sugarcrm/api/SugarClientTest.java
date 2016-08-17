@@ -6,6 +6,8 @@ import com.sugarcrm.api.v4.impl.SetEntryResponse;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -13,6 +15,8 @@ import java.util.*;
  * Unit tests for Sugar Client
  */
 public class SugarClientTest extends TestCase {
+
+    private final static Logger LOG = LoggerFactory.getLogger(SugarClientTest.class);
     /**
      * Create the test case
      *
@@ -174,11 +178,11 @@ public class SugarClientTest extends TestCase {
             SugarSession session = client.getSugarSession(new SugarCredentials("seb", "Seb"));
             List<SugarBean> beans = client.getRelationships(session, "Contacts", "7870e090-32cb-4f54-a2c9-57960000121a", "calls", fields);
             assertNotNull(beans);
-            assertEquals(3, beans.size());
+            assertEquals(6, beans.size());
             assertEquals("Calls", beans.get(0).getModuleName());
-            assertEquals("7975673a-e253-1236-6f2c-5796498bb49c", beans.get(0).get("id"));
+            assertEquals("3f80e335-7b2d-e242-d595-57b346f104e6", beans.get(0).get("id"));
             assertEquals("Calls", beans.get(1).getModuleName());
-            assertEquals("cfb22060-6336-d7d6-5a57-579649f0bcc3", beans.get(1).get("id"));
+            assertEquals("800751fb-0386-2822-55de-57b3594f682a", beans.get(1).get("id"));
 
         } catch (Exception e) {
             e.printStackTrace();
