@@ -36,7 +36,7 @@ public class SugarBean implements com.sugarcrm.api.SugarBean {
     }
 
     public String get(String fieldName) {
-        return values.get(fieldName).get("value");
+        return (values.get(fieldName) == null ) ? null : values.get(fieldName).get("value");
     }
 
     public Collection<String> getFieldNames() {
