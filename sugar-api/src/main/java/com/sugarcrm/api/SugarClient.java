@@ -59,6 +59,10 @@ public class SugarClient {
         return sugar.getRelationships(session, moduleName, id, target, targetFields);
     }
 
+    public SetRelationshipResponse setRelationship(SugarSession session, String moduleName, String module_id, String link_field_name, List<String> related_ids, List<String> name_value_list, Integer delete) throws SugarApiException {
+        return sugar.setRelationship(session, moduleName, module_id, link_field_name, related_ids, name_value_list, delete);
+    }
+
     public DocumentRevision getDocumentRevision(SugarSession session, String revisionId) throws SugarApiException {
         return sugar.getDocumentRevision(session, revisionId);
     }

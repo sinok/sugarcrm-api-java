@@ -144,6 +144,13 @@ public class SugarApi {
         }
     }
 
+    public SetRelationshipResponse setRelationship(SugarSession session, String moduleName, String module_id, String link_field_name, List<String> related_ids, List<String> name_value_list, Integer delete) throws SugarApiException {
+        String sessionId = session.getSessionID();
+        SugarRequest request = new SetRelationshipRequest(sessionId, moduleName, module_id, link_field_name, related_ids, name_value_list, delete);
+        SugarPostParameters params = new SugarPostParameters().method("set_relationship").restData(request);
+        return json.fromJson(postToSugar(restEndpoint, params), SetRelationshipResponse.class);
+    }
+
     public SetEntryResponse setEntry(SugarSession session, String moduleName, List<Map<String, Object>> nameValueList) throws SugarApiException {
         String sessionId = session.getSessionID();
         SugarRequest request = new SetEntryRequest(sessionId, moduleName, nameValueList);
