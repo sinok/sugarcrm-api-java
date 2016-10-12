@@ -24,4 +24,8 @@ public class SetRelationshipResponse implements SugarResponse {
         return deleted;
     }
 
+    public String toString(){
+        String stringed = "Created : " + getCreated().toString() + ". Failed : " + getFailed().toString() + ". Deleted : " + getDeleted().toString() + ".";
+        return stringed;
+    }
 }

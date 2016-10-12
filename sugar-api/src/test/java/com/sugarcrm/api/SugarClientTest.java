@@ -190,11 +190,15 @@ public class SugarClientTest extends TestCase {
         }
     }
 
+    //TODO : test setRelationship
+
+
     public void testGetDocumentRevision() {
         SugarClient client = new SugarClient("http://test.itanis.fr/suite", SugarClient.SUGAR_API_VERSION_4_1);
         try {
             SugarSession session = client.getSugarSession(new SugarCredentials("seb", "Seb"));
             DocumentRevision doc = client.getDocumentRevision(session,"5de40f18-b1eb-07ce-ef5e-579657237720");
+
             assertNotNull(doc);
             assertEquals("Calendrier-de-place-2016.pdf", doc.getFilename());
             assertNotNull(doc.getContent());
