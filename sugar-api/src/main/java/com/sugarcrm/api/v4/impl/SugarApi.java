@@ -75,6 +75,12 @@ public class SugarApi {
         return json.fromJson(postToSugar(restEndpoint, params), SugarLoginResponse.class);
     }
 
+    public void closeSugarSession(SugarSession session) throws SugarApiException {
+        SugarRequest logoutReq = new SugarLogoutRequest(session);
+        SugarPostParameters params = new SugarPostParameters().method("logout").restData(logoutReq);
+        postToSugar(restEndpoint, params);
+    }
+
     public SugarBean getBean(SugarSession session, String moduleName, String uuid) throws SugarApiException {
         String sessionId = session.getSessionID();
         SugarRequest req = new GetEntryRequest(sessionId, moduleName, uuid);

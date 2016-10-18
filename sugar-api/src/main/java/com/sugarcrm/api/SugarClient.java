@@ -66,4 +66,8 @@ public class SugarClient {
     public DocumentRevision getDocumentRevision(SugarSession session, String revisionId) throws SugarApiException {
         return sugar.getDocumentRevision(session, revisionId);
     }
+
+    public void closeSugarSession (SugarSession session) throws SugarApiException {
+        sugar.closeSugarSession(session);
+    }
 }
