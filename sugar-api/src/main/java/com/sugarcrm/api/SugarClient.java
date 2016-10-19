@@ -2,6 +2,7 @@ package com.sugarcrm.api;
 
 import com.sugarcrm.api.v4.impl.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -70,4 +71,13 @@ public class SugarClient {
     public void closeSugarSession (SugarSession session) throws SugarApiException {
         sugar.closeSugarSession(session);
     }
+
+    public SugarModuleFields getModuleFields(SugarSession session, String module, List<String> fields) throws SugarApiException {
+        return sugar.getModuleFields(session, module, fields);
+    }
+
+    public  SugarModuleFields getModuleFields(SugarSession session, String module) throws SugarApiException {
+        return getModuleFields(session, module, new ArrayList<String>());
+    }
+
 }

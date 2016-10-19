@@ -81,6 +81,13 @@ public class SugarApi {
         postToSugar(restEndpoint, params);
     }
 
+    public SugarModuleFields getModuleFields(SugarSession session, String module, List<String> fields) throws SugarApiException {
+        SugarRequest getFieldsReq = new GetModuleFieldsRequest(session.getSessionID(), module, fields);
+        SugarPostParameters params = new SugarPostParameters().method("get_module_fields").restData(getFieldsReq);
+        SugarModuleFields fieldsResp = json.fromJson(postToSugar(restEndpoint, params), SugarModuleFields.class);
+        return fieldsResp;
+    }
+
     public SugarBean getBean(SugarSession session, String moduleName, String uuid) throws SugarApiException {
         String sessionId = session.getSessionID();
         SugarRequest req = new GetEntryRequest(sessionId, moduleName, uuid);
@@ -192,8 +199,8 @@ public class SugarApi {
             try {
                 ErrorResponse resp = json.fromJson(response, ErrorResponse.class);
                 if (resp != null && resp.getNumber() != null) {
-                    LOG.info("Sugar API error found");
-                    LOG.info("Error content: " + resp);
+                    LOG.debug("Sugar API error found");
+                    LOG.debug("Error content: " + resp);
                     return resp;
                 }
             } catch (JsonSyntaxException e) {
