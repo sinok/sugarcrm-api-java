@@ -12,13 +12,13 @@ public class SetEntriesResponse implements SugarResponse {
 
     protected List<String> ids;
     @SerializedName("entry_list")
-    protected SugarBean[] entryList;
+//    protected SugarBean[] entryList;
 
     public List<String> getIds() {
         return ids;
     }
 
-    public SugarBean[] getEntryList() {
-        return entryList;
-    }
+//    public SugarBean[] getEntryList() {
+//        return entryList;
+//    }
 }
