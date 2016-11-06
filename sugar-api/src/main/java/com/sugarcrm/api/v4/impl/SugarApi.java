@@ -51,7 +51,7 @@ public class SugarApi {
             }
 
             String response = result.getBody();
-            LOG.info("Response: " + response);
+            LOG.debug("Response: " + response);
             ErrorResponse err = new SugarResponseValidator(response).getError();
             LOG.debug("Error response: " + err);
 
