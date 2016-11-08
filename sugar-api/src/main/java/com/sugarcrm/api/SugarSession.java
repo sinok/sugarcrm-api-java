@@ -5,9 +5,11 @@ package com.sugarcrm.api;
  * @author mmarum
  *
  */
+
 public interface SugarSession {
 	
   public String getSessionID();
   public User getUser();
+
 
 }

@@ -20,5 +20,8 @@ public class SugarLoginResponse extends SugarBean implements SugarSession, Sugar
     User user = new UsersResponse(values, moduleName);
     return user;
   }
+  public SugarLoginResponse(String id){
+    this.id = id;
+  }
 
 }
