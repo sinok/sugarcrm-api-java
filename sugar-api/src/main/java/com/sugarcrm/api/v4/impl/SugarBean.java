@@ -31,6 +31,12 @@ public class SugarBean implements com.sugarcrm.api.SugarBean {
         moduleName = module_name;
     }
 
+    public SugarBean(String id, HashMap<String, HashMap<String, String>> name_value_list, String module_name) {
+        values = name_value_list;
+        this.id = id;
+        moduleName = module_name;
+    }
+
     public String getId() {
         return id;
     }
