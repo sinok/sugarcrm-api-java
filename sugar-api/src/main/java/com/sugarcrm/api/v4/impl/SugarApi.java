@@ -63,7 +63,10 @@ public class SugarApi {
                 throw e;
             }
 
+            //todo : faire mieux avec un deserializer custum ?
+            // Suppression de l'object id qui générait une erreur lors de l'update, car double parametre avec meme nom
             response = response.replaceAll("\"id\"\\:\\{\"name\"\\:\"id\",\"value\"\\:\"[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\"\\},", "");
+
             return response;
         } catch (UnirestException e) {
             LOG.error("Error while calling the SugarCRM service", e);
