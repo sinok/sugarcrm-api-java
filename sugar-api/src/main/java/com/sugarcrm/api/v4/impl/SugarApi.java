@@ -38,7 +38,7 @@ public class SugarApi {
     }
 
     public String postToSugar(String urlStr, SugarPostParameters params) throws SugarApiException {
-        LOG.info("JSON rest_data: " + json.toJson(params.restData));
+        LOG.debug("JSON rest_data: " + json.toJson(params.restData));
         try {
             HttpResponse<String> result = Unirest.post(urlStr)
                     .field("method", params.method)
@@ -52,9 +52,9 @@ public class SugarApi {
             }
 
             String response = result.getBody();
-            LOG.info("Response: " + response);
+            LOG.debug("Response: " + response);
             ErrorResponse err = new SugarResponseValidator(response).getError();
-            LOG.info("Error response: " + err);
+            LOG.debug("Error response: " + err);
 
             if (err != null) {
                 SugarApiException e = new SugarApiException(err.getDescription());
@@ -63,6 +63,7 @@ public class SugarApi {
                 throw e;
             }
 
+            response = response.replaceAll("\"id\"\\:\\{\"name\"\\:\"id\",\"value\"\\:\"[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\"\\},", "");
             return response;
         } catch (UnirestException e) {
             LOG.error("Error while calling the SugarCRM service", e);

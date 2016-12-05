@@ -28,7 +28,7 @@ public class SugarBean implements com.sugarcrm.api.SugarBean {
 
     //Needed for Gson
     public SugarBean() {
-        LOG.info("SugarBean created (empty contructor)");
+        LOG.debug("SugarBean created (empty contructor)");
     }
 
     public SugarBean(HashMap<String, HashMap<String, String>> name_value_list, String module_name) {
@@ -41,12 +41,6 @@ public class SugarBean implements com.sugarcrm.api.SugarBean {
         this.id = id;
         moduleName = module_name;
     }
-
-//    public SugarBean(HashMap<String, String> id, HashMap<String, HashMap<String, String>> name_value_list, String module_name) {
-//        values = name_value_list;
-//        this.id = id.get("id");
-//        moduleName = module_name;
-//    }
 
     public String getId() {
         return id;
