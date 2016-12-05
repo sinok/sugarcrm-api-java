@@ -1,6 +1,8 @@
 package com.sugarcrm.api.v4.impl;
 
 import com.google.gson.annotations.SerializedName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,6 +13,9 @@ import java.util.HashMap;
  * @author mmarum
  */
 public class SugarBean implements com.sugarcrm.api.SugarBean {
+
+
+    private final static Logger LOG = LoggerFactory.getLogger(SugarBean.class);
 
     @SerializedName("name_value_list")
     protected HashMap<String, HashMap<String, String>> values;
@@ -23,7 +28,7 @@ public class SugarBean implements com.sugarcrm.api.SugarBean {
 
     //Needed for Gson
     public SugarBean() {
-
+        LOG.info("SugarBean created (empty contructor)");
     }
 
     public SugarBean(HashMap<String, HashMap<String, String>> name_value_list, String module_name) {
@@ -36,6 +41,12 @@ public class SugarBean implements com.sugarcrm.api.SugarBean {
         this.id = id;
         moduleName = module_name;
     }
+
+//    public SugarBean(HashMap<String, String> id, HashMap<String, HashMap<String, String>> name_value_list, String module_name) {
+//        values = name_value_list;
+//        this.id = id.get("id");
+//        moduleName = module_name;
+//    }
 
     public String getId() {
         return id;

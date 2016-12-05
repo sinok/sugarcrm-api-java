@@ -6,6 +6,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.sugarcrm.api.*;
 import com.sugarcrm.api.SugarBean;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,7 @@ public class SugarApi {
     }
 
     public String postToSugar(String urlStr, SugarPostParameters params) throws SugarApiException {
-        LOG.debug("JSON rest_data: " + json.toJson(params.restData));
+        LOG.info("JSON rest_data: " + json.toJson(params.restData));
         try {
             HttpResponse<String> result = Unirest.post(urlStr)
                     .field("method", params.method)
@@ -51,9 +52,9 @@ public class SugarApi {
             }
 
             String response = result.getBody();
-            LOG.debug("Response: " + response);
+            LOG.info("Response: " + response);
             ErrorResponse err = new SugarResponseValidator(response).getError();
-            LOG.debug("Error response: " + err);
+            LOG.info("Error response: " + err);
 
             if (err != null) {
                 SugarApiException e = new SugarApiException(err.getDescription());

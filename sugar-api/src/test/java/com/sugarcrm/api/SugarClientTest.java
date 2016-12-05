@@ -37,7 +37,7 @@ public class SugarClientTest extends TestCase {
      * Rigorous Test :-)
      */
     public void testLogin() {
-        SugarClient client = new SugarClient("http://test.itanis.fr/suite", SugarClient.SUGAR_API_VERSION_4_1);
+        SugarClient client = new SugarClient("https://test.itanis.fr/suite", SugarClient.SUGAR_API_VERSION_4_1);
         try {
             SugarSession session = client.getSugarSession("seb", "Seb");
             assertNotNull(session);
@@ -54,7 +54,7 @@ public class SugarClientTest extends TestCase {
     }
 
     public void testGetBean() {
-        SugarClient client = new SugarClient("http://test.itanis.fr/suite", SugarClient.SUGAR_API_VERSION_4_1);
+        SugarClient client = new SugarClient("https://test.itanis.fr/suite", SugarClient.SUGAR_API_VERSION_4_1);
         try {
             SugarSession session = client.getSugarSession(new SugarCredentials("seb", "Seb"));
             SugarBean bean = client.getBean(session, "Calls", "7975673a-e253-1236-6f2c-5796498bb49c");
@@ -68,7 +68,7 @@ public class SugarClientTest extends TestCase {
     }
 
     public void testGetBeansById() {
-        SugarClient client = new SugarClient("http://test.itanis.fr/suite", SugarClient.SUGAR_API_VERSION_4_1);
+        SugarClient client = new SugarClient("https://test.itanis.fr/suite", SugarClient.SUGAR_API_VERSION_4_1);
         String[] params = {"7975673a-e253-1236-6f2c-5796498bb49c"};
         List<String> uuids = Arrays.asList(params);
         try {
@@ -86,7 +86,7 @@ public class SugarClientTest extends TestCase {
     }
 
     public void testGetBeans() {
-        SugarClient client = new SugarClient("http://test.itanis.fr/suite", SugarClient.SUGAR_API_VERSION_4_1);
+        SugarClient client = new SugarClient("https://test.itanis.fr/suite", SugarClient.SUGAR_API_VERSION_4_1);
         try {
             SugarSession session = client.getSugarSession(new SugarCredentials("seb", "Seb"));
             List<SugarBean> beans = client.getBeans(session, "Calls", null);
@@ -102,7 +102,7 @@ public class SugarClientTest extends TestCase {
     }
 
     public void testSetEntry() {
-        SugarClient client = new SugarClient("http://test.itanis.fr/suite", SugarClient.SUGAR_API_VERSION_4_1);
+        SugarClient client = new SugarClient("https://test.itanis.fr/suite", SugarClient.SUGAR_API_VERSION_4_1);
         List<Map<String, Object>> entryData = new ArrayList<Map<String, Object>>();
         Map<String, Object> name = new HashMap<String, Object>();
         name.put("name", "name");
@@ -136,7 +136,7 @@ public class SugarClientTest extends TestCase {
 
 
     public void testSetEntries() {
-        SugarClient client = new SugarClient("http://test.itanis.fr/suite", SugarClient.SUGAR_API_VERSION_4_1);
+        SugarClient client = new SugarClient("https://test.itanis.fr/suite", SugarClient.SUGAR_API_VERSION_4_1);
         List<List<Map<String, Object>>> entriesData = new ArrayList<List<Map<String, Object>>>();
         List<Map<String, Object>> entryData = new ArrayList<Map<String, Object>>();
         Map<String, Object> name = new HashMap<String, Object>();
@@ -171,7 +171,7 @@ public class SugarClientTest extends TestCase {
     }
 
     public void testGetRelationships() {
-        SugarClient client = new SugarClient("http://test.itanis.fr/suite", SugarClient.SUGAR_API_VERSION_4_1);
+        SugarClient client = new SugarClient("https://test.itanis.fr/suite", SugarClient.SUGAR_API_VERSION_4_1);
         String[] params = {"id", "names"};
         List<String> fields = Arrays.asList(params);
         try {
@@ -194,7 +194,7 @@ public class SugarClientTest extends TestCase {
 
 
     public void testGetDocumentRevision() {
-        SugarClient client = new SugarClient("http://test.itanis.fr/suite", SugarClient.SUGAR_API_VERSION_4_1);
+        SugarClient client = new SugarClient("https://test.itanis.fr/suite", SugarClient.SUGAR_API_VERSION_4_1);
         try {
             SugarSession session = client.getSugarSession(new SugarCredentials("seb", "Seb"));
             DocumentRevision doc = client.getDocumentRevision(session,"5de40f18-b1eb-07ce-ef5e-579657237720");

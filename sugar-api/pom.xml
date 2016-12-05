@@ -72,5 +72,12 @@
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>internal.repo</id>
+            <name>Internal repo</name>
+            <url>file:///home/nico/.m2/repository</url>
+        </repository>
+    </distributionManagement>
 
 </project>
