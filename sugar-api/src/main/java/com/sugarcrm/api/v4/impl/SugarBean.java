@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
+import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * SugarBean response for the v4 API
@@ -47,7 +48,7 @@ public class SugarBean implements com.sugarcrm.api.SugarBean {
     }
 
     public String get(String fieldName) {
-        return (values.get(fieldName) == null ) ? null : values.get(fieldName).get("value");
+        return (values.get(fieldName) == null ) ? null : StringEscapeUtils.unescapeHtml(values.get(fieldName).get("value"));
     }
 
     public Collection<String> getFieldNames() {
